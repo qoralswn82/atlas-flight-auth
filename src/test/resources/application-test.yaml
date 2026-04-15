@@ -1,0 +1,11 @@
+# 통합 테스트는 로컬 MySQL 없이 H2 인메모리로 기동합니다.
+spring:
+  datasource:
+    url: jdbc:h2:mem:authtest;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop

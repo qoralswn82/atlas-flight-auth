@@ -1,0 +1,37 @@
+# Spring Boot: 계층 구조(들여쓰기)와 키-값 콜론 뒤 공백 문법이 맞습니다.
+spring:
+  application:
+    name: auth
+  datasource:
+    # log4jdbc는 보통 mysql 서브프로토콜과 조합 (DB가 MariaDB여도 MySQL 호환 접속)
+    url: {{url}}?allowMultiQueries=true
+    username: {{username}}
+    # YAML에서 ! 는 특수문자일 수 있어 반드시 따옴표로 감쌉니다.
+    password: {{password}}
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+  jpa:
+    # log4jdbc 등으로 JDBC 메타데이터 기반 방언 자동 감지가 실패할 때 명시합니다.
+    database-platform: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 16
+        jdbc:
+          time_zone: UTC
+
+server:
+  port: 8082
+  servlet:
+    context-path: /auth/api
+
+crypto:
+  secret-key: {{secret-key}}
+
+jwt:
+  secret: {{jwt-secret}}
+  access-token-expiration: 3600000
+  refresh-token-expiration: 604800000

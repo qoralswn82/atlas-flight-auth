@@ -1,0 +1,4 @@
+rootProject.name = 'auth'
+
+include("core-lib")
+project(":core-lib").projectDir = file("./../atlas-flight-core-lib")
