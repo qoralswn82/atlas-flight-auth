@@ -4,10 +4,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.atlas.flight.core.ApiResponse;
-import org.atlas.flight.auth.domain.auth.dto.request.AuthJoinRequest;
 import org.atlas.flight.auth.domain.auth.dto.request.AuthLoginRequest;
+import org.atlas.flight.auth.domain.auth.dto.request.AuthSignupRequest;
 import org.atlas.flight.auth.domain.auth.dto.response.AuthLoginResponse;
 import org.atlas.flight.auth.domain.auth.property.AuthProperties;
 import org.atlas.flight.auth.domain.auth.service.AuthService;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "인증")
 public class AuthController {
 	private final AuthService authService;
-	
+
 	/**
 	 * 회원가입
 	 *
@@ -33,10 +34,10 @@ public class AuthController {
 	 */
 	@PostMapping("/join")
 	@Operation(summary = "회원가입")
-	public ApiResponse<Integer> join(@RequestBody AuthJoinRequest request) {
+	public ApiResponse<Integer> join(@Valid @RequestBody AuthSignupRequest request) {
 		return ApiResponse.success(authService.join(request));
 	}
-	
+
 	/**
 	 * 로그인
 	 *
@@ -46,9 +47,9 @@ public class AuthController {
 	 */
 	@PostMapping("/login")
 	@Operation(summary = "로그인")
-	public ApiResponse<AuthLoginResponse> login(@RequestBody AuthLoginRequest request, HttpServletResponse response) {
+	public ApiResponse<AuthLoginResponse> login(@Valid @RequestBody AuthLoginRequest request, HttpServletResponse response) {
 		AuthLoginResponse loginInfo = authService.login(request);
-		
+
 		// HttpOnly 쿠키로 토큰 설정
 		Cookie cookie = new Cookie(AuthProperties.accessToken, loginInfo.getAccessToken());
 		cookie.setHttpOnly(true);
@@ -56,12 +57,12 @@ public class AuthController {
 		cookie.setPath("/");
 		cookie.setMaxAge(60 * 60);
 		cookie.setAttribute("SameSite", "Strict"); // CSRF 방지
-		
+
 		response.addCookie(cookie);
-		
+
 		return ApiResponse.success(loginInfo);
 	}
-	
+
 	/**
 	 * 로그아웃
 	 *
@@ -77,12 +78,12 @@ public class AuthController {
 		cookie.setSecure(false);
 		cookie.setPath("/");
 		cookie.setMaxAge(0);
-		
+
 		response.addCookie(cookie);
-		
+
 		return ApiResponse.success();
 	}
-	
+
 	/**
 	 * 사용자 아이디 사용 가능 여부
 	 *
@@ -94,17 +95,5 @@ public class AuthController {
 	public ApiResponse<Boolean> availableUserId(@RequestParam String userId) {
 		// TODO 보안상, Rate limiting 반드시 필요
 		return ApiResponse.success(authService.availableUserId(userId));
-	}
-	
-	/**
-	 * 이메일 사용 가능 여부
-	 *
-	 * @param email 이메일
-	 * @return true = 사용 가능, false = 사용 불가
-	 */
-	@GetMapping("/available/email")
-	@Operation(summary = "이메일 사용 가능 여부", description = "응답 true = 사용 가능, false = 사용 불가")
-	public ApiResponse<Boolean> availableEmail(@RequestParam String email) {
-		return ApiResponse.success(authService.availableEmail(email));
 	}
 }
