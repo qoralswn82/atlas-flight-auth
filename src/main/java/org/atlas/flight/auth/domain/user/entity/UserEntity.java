@@ -11,12 +11,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.atlas.flight.auth.domain.auth.dto.request.AuthJoinRequest;
 
 import java.time.LocalDateTime;
 
 /**
- * 사용자
+ * 인증 전용 사용자 (자격 증명). 프로필은 고객 모듈에서 관리합니다.
  */
 @Entity
 @Table(name = "TBL_USER")
@@ -30,20 +29,11 @@ public class UserEntity {
 	@Column(name = "USER_ID", length = 30, nullable = false)
 	private String userId;
 
-	@Column(name = "USER_NAME", length = 30, nullable = false)
-	private String userName;
-
-	@Column(name = "EMAIL", length = 64, nullable = false)
-	private String email;
-
-	@Column(name = "SALT", nullable = false)
-	private String salt;
-
-	@Column(name = "PASSWORD", nullable = false)
+	@Column(name = "PASSWORD", nullable = false, length = 255)
 	private String password;
 
-	@Column(name = "DEL_YN", length = 1, nullable = false)
-	private String delYn;
+	@Column(name = "SALT", nullable = false, length = 128)
+	private String salt;
 
 	@Column(name = "REG_DT")
 	private LocalDateTime regDt;
@@ -73,16 +63,13 @@ public class UserEntity {
 		mdfcnDt = LocalDateTime.now();
 	}
 
-	public static UserEntity toEntity(AuthJoinRequest request) {
-		UserEntity entity = new UserEntity();
-		entity.setUserId(request.getUserId());
-		entity.setUserName(request.getUserName());
-		entity.setEmail(request.getEmail());
-		entity.setPassword(request.getPassword());
-		entity.setSalt(request.getSalt());
-		entity.setDelYn("N");
-		entity.setRgtrId(request.getRgtrId());
-		entity.setMdfrId(request.getMdfrId());
-		return entity;
+	public static UserEntity ofCredentials(String userId, String hashedPassword, String salt, String actorId) {
+		return UserEntity.builder()
+				.userId(userId)
+				.password(hashedPassword)
+				.salt(salt)
+				.rgtrId(actorId)
+				.mdfrId(actorId)
+				.build();
 	}
 }
