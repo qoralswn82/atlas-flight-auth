@@ -26,6 +26,13 @@ spring:
         default_batch_fetch_size: 16
         jdbc:
           time_zone: UTC
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 5000
+            read-timeout: 15000
 
 server:
   port: 8082
@@ -39,3 +46,8 @@ jwt:
   secret: "{{jwt-secret}}"
   access-token-expiration: 3600000
   refresh-token-expiration: 604800000
+
+# 고객 모듈(atlas-flight-customer) 베이스 URL (server.servlet.context-path 포함)
+customer:
+  service:
+    url: http://localhost:8086/customer
