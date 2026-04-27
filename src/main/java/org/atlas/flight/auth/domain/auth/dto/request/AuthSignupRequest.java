@@ -30,6 +30,7 @@ public class AuthSignupRequest {
 
 	@NotBlank
 	@Size(min = 8, max = 64)
+	@Pattern(regexp = AuthFormatValidation.PASSWORD_REGEXP, message = AuthFormatValidation.PASSWORD)
 	@Schema(description = "평문 비밀번호", minLength = 8, maxLength = 64)
 	private String password;
 
@@ -78,7 +79,7 @@ public class AuthSignupRequest {
 	private String phoneNumber;
 
 	@NotBlank
-	@Pattern(regexp = AuthFormatValidation.EMAIL_ONLY_REGEXP, message = AuthFormatValidation.EMAIL_ONLY)
+	@Pattern(regexp = AuthFormatValidation.EMAIL_REGEXP, message = AuthFormatValidation.EMAIL)
 	@Schema(description = "이메일")
 	private String email;
 
