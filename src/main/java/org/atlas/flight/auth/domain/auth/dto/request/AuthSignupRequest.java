@@ -25,8 +25,8 @@ import java.time.LocalDate;
 public class AuthSignupRequest {
 	@NotBlank
 	@Size(min = 1, max = 30)
-	@Schema(description = "사용자 아이디 (고객 CUSTOMER_ID와 동일)", example = "john.snow")
-	private String userId;
+	@Schema(description = "고객 아이디 (고객 CUSTOMER_ID와 동일)", example = "john.snow")
+	private String customerId;
 
 	@NotBlank
 	@Size(min = 8, max = 64)

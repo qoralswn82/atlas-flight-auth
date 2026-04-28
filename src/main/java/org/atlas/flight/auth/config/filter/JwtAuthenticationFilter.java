@@ -35,10 +35,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		
 		if (token != null && jwtTokenProvider.validateToken(token)) {
 			try {
-				String userId = jwtTokenProvider.getUserId(token);
+				String customerId = jwtTokenProvider.getCustomerId(token);
 				List<String> roles = jwtTokenProvider.getRoles(token);
 				
-				log.debug("JWT Authentication successful for user: {}", userId);
+				log.debug("JWT Authentication successful for customer: {}", customerId);
 				
 				// Spring Security 인증 객체 생성
 				List<GrantedAuthority> authorities = roles.stream()
@@ -46,7 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 						.collect(Collectors.toList());
 				
 				UsernamePasswordAuthenticationToken authentication =
-						new UsernamePasswordAuthenticationToken(userId, null, authorities);
+						new UsernamePasswordAuthenticationToken(customerId, null, authorities);
 				
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 			} catch (Exception e) {

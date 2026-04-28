@@ -14,9 +14,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @Schema(name = "[응답] 로그인 정보 (AuthLoginResponse)")
 public class AuthLoginResponse {
-	/** 사용자 아이디 */
-	@Schema(description = "사용자 아이디")
-	private String userId;
+	/** 고객 아이디 */
+	@Schema(description = "고객 아이디")
+	private String customerId;
 	/** 사용자 이름 */
 	@Schema(description = "사용자 이름")
 	private String userName;

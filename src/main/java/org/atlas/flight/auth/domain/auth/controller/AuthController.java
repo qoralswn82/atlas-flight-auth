@@ -85,15 +85,15 @@ public class AuthController {
 	}
 
 	/**
-	 * 사용자 아이디 사용 가능 여부
+	 * 고객 아이디 사용 가능 여부
 	 *
-	 * @param userId 사용자 아이디
+	 * @param customerId 고객 아이디
 	 * @return true = 사용 가능, false = 사용 불가
 	 */
-	@GetMapping("/available/user_id")
-	@Operation(summary = "사용자 아이디 사용 가능 여부", description = "응답 true = 사용 가능, false = 사용 불가")
-	public ApiResponse<Boolean> availableUserId(@RequestParam String userId) {
+	@GetMapping("/available/customer_id")
+	@Operation(summary = "고객 아이디 사용 가능 여부", description = "응답 true = 사용 가능, false = 사용 불가")
+	public ApiResponse<Boolean> availableCustomerId(@RequestParam String customerId) {
 		// TODO 보안상, Rate limiting 반드시 필요
-		return ApiResponse.success(authService.availableUserId(userId));
+		return ApiResponse.success(authService.availableCustomerId(customerId));
 	}
 }

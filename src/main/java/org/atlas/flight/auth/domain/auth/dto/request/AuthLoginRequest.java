@@ -14,8 +14,8 @@ import lombok.Setter;
 @Schema(name = "[요청] 로그인 (AuthLoginRequest)")
 public class AuthLoginRequest {
 	@NotBlank
-	@Schema(description = "사용자 아이디")
-	private String userId;
+	@Schema(description = "고객 아이디")
+	private String customerId;
 	@NotBlank
 	@Schema(description = "비밀번호")
 	private String password;

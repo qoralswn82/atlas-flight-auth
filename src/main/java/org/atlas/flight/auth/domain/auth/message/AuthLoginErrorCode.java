@@ -13,8 +13,8 @@ import org.atlas.flight.core.message.ResponseCodeInterface;
 @AllArgsConstructor
 public enum AuthLoginErrorCode implements ResponseCodeInterface {
 
-	/** 1. 일치하는 아이디가 없을 경우 — HTTP 404(Not Found)에 대응 */
-	USER_ID_NOT_FOUND("LGN404", "존재하지 않는 사용자입니다.", "입력한 아이디와 일치하는 계정이 없습니다."),
+	/** 1. 일치하는 고객 아이디가 없을 경우 — HTTP 404(Not Found)에 대응 */
+	CUSTOMER_ID_NOT_FOUND("LGN404", "존재하지 않는 사용자입니다.", "입력한 고객 아이디와 일치하는 계정이 없습니다."),
 
 	/** 2. 비밀번호가 불일치할 경우 — HTTP 401(Unauthorized)에 대응 */
 	PASSWORD_MISMATCH("LGN401", "비밀번호가 일치하지 않습니다.", "입력한 비밀번호를 확인해 주세요."),
