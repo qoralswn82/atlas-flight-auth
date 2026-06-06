@@ -9,5 +9,5 @@ public interface AuthService {
 
 	AuthLoginResponse login(AuthLoginRequest request);
 
-	boolean availableUserId(String userId);
+	boolean availableCustomerId(String customerId);
 }

@@ -26,8 +26,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UserEntity {
 	@Id
-	@Column(name = "USER_ID", length = 30, nullable = false)
-	private String userId;
+	@Column(name = "CUSTOMER_ID", length = 30, nullable = false)
+	private String customerId;
 
 	@Column(name = "PASSWORD", nullable = false, length = 255)
 	private String password;
@@ -63,9 +63,9 @@ public class UserEntity {
 		mdfcnDt = LocalDateTime.now();
 	}
 
-	public static UserEntity ofCredentials(String userId, String hashedPassword, String salt, String actorId) {
+	public static UserEntity ofCredentials(String customerId, String hashedPassword, String salt, String actorId) {
 		return UserEntity.builder()
-				.userId(userId)
+				.customerId(customerId)
 				.password(hashedPassword)
 				.salt(salt)
 				.rgtrId(actorId)

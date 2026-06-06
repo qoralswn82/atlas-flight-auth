@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	@Transactional
 	public int join(AuthSignupRequest request) {
-		if (userRepository.existsByUserId(request.getUserId())) {
+		if (userRepository.existsByCustomerId(request.getCustomerId())) {
 			throw new ApiException(ResponseCodeGeneral.BAD_REQUEST);
 		}
 
@@ -44,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
 		String hashedPassword = hashPassword(request.getPassword(), salt);
 
 		CustomerCreateFeignRequest customerReq = CustomerCreateFeignRequest.builder()
-				.customerId(request.getUserId())
+				.customerId(request.getCustomerId())
 				.korFirstName(request.getKorFirstName())
 				.korLastName(request.getKorLastName())
 				.engFirstName(request.getEngFirstName())
@@ -63,15 +63,15 @@ public class AuthServiceImpl implements AuthService {
 			throw mapFeignToApi(e);
 		}
 
-		userRepository.save(UserEntity.ofCredentials(request.getUserId(), hashedPassword, salt, request.getUserId()));
+		userRepository.save(UserEntity.ofCredentials(request.getCustomerId(), hashedPassword, salt, request.getCustomerId()));
 		return 1;
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public AuthLoginResponse login(AuthLoginRequest request) {
-		UserEntity user = userRepository.findByUserId(request.getUserId())
-				.orElseThrow(() -> new ApiException(AuthLoginErrorCode.USER_ID_NOT_FOUND));
+		UserEntity user = userRepository.findByCustomerId(request.getCustomerId())
+				.orElseThrow(() -> new ApiException(AuthLoginErrorCode.CUSTOMER_ID_NOT_FOUND));
 
 		String inputHash;
 		try {
@@ -92,12 +92,12 @@ public class AuthServiceImpl implements AuthService {
 			throw new ApiException(AuthLoginErrorCode.PASSWORD_MISMATCH);
 		}
 
-		String accessToken = jwtTokenProvider.createAccessToken(user.getUserId(), List.of("USER"));
+		String accessToken = jwtTokenProvider.createAccessToken(user.getCustomerId(), List.of("USER"));
 
-		String displayName = resolveDisplayName(user.getUserId());
+		String displayName = resolveDisplayName(user.getCustomerId());
 
 		return AuthLoginResponse.builder()
-				.userId(user.getUserId())
+				.customerId(user.getCustomerId())
 				.userName(displayName)
 				.accessToken(accessToken)
 				.build();
@@ -105,13 +105,13 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public boolean availableUserId(String userId) {
-		return !userRepository.existsByUserId(userId);
+	public boolean availableCustomerId(String customerId) {
+		return !userRepository.existsByCustomerId(customerId);
 	}
 
-	private String resolveDisplayName(String userId) {
+	private String resolveDisplayName(String customerId) {
 		try {
-			ApiResponse<CustomerFeignResponse> res = customerFeignClient.getCustomer(userId);
+			ApiResponse<CustomerFeignResponse> res = customerFeignClient.getCustomer(customerId);
 			if (res == null || res.getData() == null) {
 				return null;
 			}
@@ -119,9 +119,9 @@ public class AuthServiceImpl implements AuthService {
 			if (data.getKorFirstName() != null && data.getKorLastName() != null) {
 				return data.getKorLastName() + data.getKorFirstName();
 			}
-			return userId;
+			return customerId;
 		} catch (FeignException e) {
-			return userId;
+			return customerId;
 		}
 	}
 

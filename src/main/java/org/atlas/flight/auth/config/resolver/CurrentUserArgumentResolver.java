@@ -11,7 +11,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
- * "@CurrentUser" 어노테이션이 붙은 파라미터에 현재 사용자 아이디를 주입하는 리졸버
+ * "@CurrentUser" 어노테이션이 붙은 파라미터에 현재 고객 아이디를 주입하는 리졸버
  */
 @Component
 public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolver {
@@ -34,6 +34,6 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
 			throw new IllegalStateException("사용자가 인증되지 않았습니다.");
 		}
 		
-		return authentication.getName(); // JWT의 subject (userId)
+		return authentication.getName(); // JWT의 subject (customerId)
 	}
 }

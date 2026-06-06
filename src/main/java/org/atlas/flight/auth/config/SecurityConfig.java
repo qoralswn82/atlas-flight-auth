@@ -16,6 +16,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+/**
+ * {@code /auth/**}·Swagger 등 공개 경로는 {@link PublicAuthEndpointWebSecurityCustomizer} 에서 필터 체인 제외.
+ * 이 설정은 그 외 요청에 JWT·세션 정책을 적용합니다.
+ */
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -30,9 +34,7 @@ public class SecurityConfig {
 			.exceptionHandling(exceptions -> exceptions
 				.authenticationEntryPoint(jwtAuthenticationEntryPoint))
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**")
-					.permitAll() // 인증 관련 엔드포인트
-				.anyRequest().authenticated()) // /auth를 제외한 모든 요청은 JWT 토큰 필요
+				.anyRequest().authenticated())
 			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}

@@ -5,7 +5,7 @@
 
 CREATE TABLE TBL_USER
 (
-    USER_ID   VARCHAR(30)                          NOT NULL COMMENT '사용자_아이디' PRIMARY KEY,
+    CUSTOMER_ID VARCHAR(30)                        NOT NULL COMMENT '고객_아이디' PRIMARY KEY,
     PASSWORD  VARCHAR(255)                         NOT NULL COMMENT '비밀번호_해시(Base64)',
     SALT      VARCHAR(128)                         NOT NULL COMMENT '비밀번호_salt(Base64)',
     REG_DT    DATETIME DEFAULT CURRENT_TIMESTAMP() NOT NULL COMMENT '등록_일시',
