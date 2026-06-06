@@ -1,6 +1,6 @@
 package org.atlas.flight.auth.config.resolver;
 
-import org.atlas.flight.auth.config.annotation.CurrentUser;
+import org.atlas.flight.core.annotation.CurrentUser;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
