@@ -94,11 +94,15 @@ public class AuthServiceImpl implements AuthService {
 
 		String accessToken = jwtTokenProvider.createAccessToken(user.getCustomerId(), List.of("USER"));
 
-		String displayName = resolveDisplayName(user.getCustomerId());
+		CustomerFeignResponse customerInfo = fetchCustomerInfo(user.getCustomerId());
 
 		return AuthLoginResponse.builder()
 				.customerId(user.getCustomerId())
-				.userName(displayName)
+				.customerNumber(customerInfo != null ? customerInfo.getCustomerNumber() : null)
+				.korFirstName(customerInfo != null ? customerInfo.getKorFirstName() : null)
+				.korLastName(customerInfo != null ? customerInfo.getKorLastName() : null)
+				.engFirstName(customerInfo != null ? customerInfo.getEngFirstName() : null)
+				.engLastName(customerInfo != null ? customerInfo.getEngLastName() : null)
 				.accessToken(accessToken)
 				.build();
 	}
@@ -109,19 +113,16 @@ public class AuthServiceImpl implements AuthService {
 		return !userRepository.existsByCustomerId(customerId);
 	}
 
-	private String resolveDisplayName(String customerId) {
+	/**
+	 * 로그인 시 표시용 고객 정보(회원번호·한글/영문 이름)를 customer 서비스에서 조회한다.
+	 * customer 가 응답하지 않아도 로그인 자체는 막지 않도록, 실패하거나 데이터가 없으면 null 을 반환한다.
+	 */
+	private CustomerFeignResponse fetchCustomerInfo(String customerId) {
 		try {
 			ApiResponse<CustomerFeignResponse> res = customerFeignClient.getCustomer(customerId);
-			if (res == null || res.getData() == null) {
-				return null;
-			}
-			CustomerFeignResponse data = res.getData();
-			if (data.getKorFirstName() != null && data.getKorLastName() != null) {
-				return data.getKorLastName() + data.getKorFirstName();
-			}
-			return customerId;
+			return res != null ? res.getData() : null;
 		} catch (FeignException e) {
-			return customerId;
+			return null;
 		}
 	}
 

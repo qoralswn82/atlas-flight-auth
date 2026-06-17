@@ -14,6 +14,9 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomerFeignResponse {
 	private String customerId;
+	private String customerNumber;
 	private String korFirstName;
 	private String korLastName;
+	private String engFirstName;
+	private String engLastName;
 }
