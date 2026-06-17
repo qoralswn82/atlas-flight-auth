@@ -53,7 +53,7 @@ jwt:
 # 고객 모듈(atlas-flight-customer) 베이스 URL (server.servlet.context-path 포함)
 customer:
   service:
-    url: http://localhost:8086/customer
+    url: http://localhost:8086/customer/api
 
 logging:
   level:
